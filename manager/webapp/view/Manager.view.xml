@@ -1,0 +1,160 @@
+<mvc:View
+    controllerName="com.manager.manager.controller.Manager"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.uxap"
+    xmlns:m="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:forms="sap.ui.layout.form"
+    xmlns:u="sap.ui.unified"
+>
+    <m:Page>
+        <m:content>
+            <ObjectPageLayout
+                id="ObjectPageLayout"
+                sectionChange="onSectionChanged"
+                enableLazyLoading="true"
+                useIconTabBar="true"
+                showTitleInHeaderContent="true"
+                upperCaseAnchorBar="false"
+            >
+                <headerTitle>
+                    <ObjectPageDynamicHeaderTitle>
+                        <expandedHeading>
+                             <m:Title text="TimeSheet Application" /> 
+                        </expandedHeading>
+                        <snappedHeading>
+                            <!-- <m:HBox>
+                                <m:Avatar
+                                    src="test-resources/sap/uxap/images/imageID_273624.png"
+                                    class="sapUiMediumMarginEnd"
+                                    displayShape="Circle"
+                                />
+                                <m:VBox>
+                                    <m:Title
+                                        text="{= ${userModel>/fullName}}"
+                                    />
+                                    <m:Label
+                                        text="{= ${userModel>/userType}}"
+                                    />
+                                </m:VBox>
+                            </m:HBox> -->
+                        </snappedHeading>
+                        <!-- <expandedContent>
+                            <m:Label text="{= ${userModel>/userType}}" />
+                        </expandedContent>
+                        <snappedTitleOnMobile>
+                            <m:Title
+                                text="{= ${userModel>/userInfo/Username}}"
+                            />
+                        </snappedTitleOnMobile> -->
+                        <actions>
+                             <m:Button
+                                tooltip="Add New Project"
+                                text="Add New Project"
+                                press="onAddNewPress"
+                                type="Emphasized"
+                                visible="false"
+                                id="addNewProjectButton"
+                            />
+                            <!-- <m:Button
+                                id="editid"
+                                tooltip="Edit"
+                                text="Edit"
+                                type="Emphasized"
+                                press="onEditPress"
+                            />
+                            <m:Button
+                                visible="true"
+                                id="deleteButtonId"
+                                tooltip="Delete"
+                                type="Transparent"
+                                text="Delete"
+                                press="onDeletePress"
+                            /> -->
+                       
+                        </actions>
+                    </ObjectPageDynamicHeaderTitle>
+                </headerTitle>
+                <headerContent>
+                    <!-- <m:FlexBox
+                        wrap="Wrap"
+                        fitContainer="true"
+                    >
+                        <m:Avatar
+                            src="test-resources/sap/uxap/images/imageID_273624.png"
+                            class="sapUiMediumMarginEnd sapUiSmallMarginBottom"
+                            displayShape="Circle"
+                            displaySize="L"
+                        />
+                        <m:VBox
+                            class="sapUiLargeMarginEnd sapUiSmallMarginBottom"
+                        >
+                            <m:HBox
+                                class="sapUiTinyMarginBottom"
+                                renderType="Bare"
+                            >
+                                <m:Label
+                                    text="Name :"
+                                    class="sapUiTinyMarginEnd"
+                                />
+                                <m:Text
+                                    text="{= ${userModel>/fullName}}"
+                                    class="red-text"
+                                />
+                            </m:HBox>
+                            <m:HBox>
+                                <m:Label
+                                    text="Email :"
+                                    class="sapUiTinyMarginEnd"
+                                />
+                                <m:Text text="{= ${userModel>/email}}" />
+                            </m:HBox>
+                        </m:VBox>
+                    </m:FlexBox> -->
+                </headerContent>
+                <sections>
+                    <ObjectPageSection
+                        titleUppercase="false"
+                        id="idOPSRequestCategory"
+                        title="Projects"
+                    >
+                        <subSections>
+                            <ObjectPageSubSection
+                                id="idOPSSRequestCategory"
+                                titleUppercase="false"
+                            >
+                                <blocks>
+                                    <core:Fragment
+                                        fragmentName="com.manager.manager.view.Projects"
+                                        type="XML"
+                                    />
+                                    
+                                </blocks>
+                                
+                            </ObjectPageSubSection>
+                        </subSections>
+                    </ObjectPageSection>
+                     <ObjectPageSection
+                        titleUppercase="false"
+                        id="idOPSeRequestCategory"
+                        title="Employees"
+                    >
+                        <subSections>
+                            <ObjectPageSubSection
+                                id="idOPSSReequestCategory"
+                                titleUppercase="false"
+                            >
+                                <blocks>
+                                    <core:Fragment
+                                        fragmentName="com.manager.manager.view.Employees"
+                                        type="XML"
+                                    />
+                                </blocks>
+                            </ObjectPageSubSection>
+                        </subSections>
+                    </ObjectPageSection>
+                </sections>
+            </ObjectPageLayout>
+        </m:content>
+    </m:Page>
+</mvc:View>

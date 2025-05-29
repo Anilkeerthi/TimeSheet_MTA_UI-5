@@ -1,0 +1,39 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+<Table id="idProjectsTable" sticky="HeaderToolbar,ColumnHeaders" growing="true" growingThreshold="10" inset="false"   items="{path: '/Projects',sorter: [ { path: 'projectName', descending: false }], parameters: { $expand: 'assignedEmployees($expand=employee)'
+ }}" class="sapFDynamicPageAlignContent" width="auto" visible="true">
+<headerToolbar>
+<Toolbar>
+<Title id="RequestTypeText" text="Projects ({= ${/Projects/$count}})"/>
+<ToolbarSpacer/>
+<SearchField width="30%" liveChange="onSearchProName" class="sapUiSmallMargin" />
+<Button type="Emphasized" icon="sap-icon://refresh" tooltip="Refresh" press="_refreshingTables"/>
+</Toolbar>
+</headerToolbar>
+<columns>
+<Column demandPopin="true" minScreenWidth="Tablet" width="auto" hAlign="Left">
+<Text tooltip="Project Name" text="Project Name"/>
+</Column>
+<Column demandPopin="true" minScreenWidth="Tablet" width="10rem" hAlign="Left">
+<Text tooltip="Start Date" text="Start Date"/>
+</Column>
+<Column minScreenWidth="Tablet" demandPopin="true" width="10rem" hAlign="Left">
+<Text tooltip="End Date" text="End Date"/>
+</Column>
+<Column minScreenWidth="Tablet" demandPopin="true" width="auto" hAlign="Left">
+<Text tooltip="Employees" text="Employees"/>
+</Column>
+</columns>
+<items>
+<ColumnListItem>
+    <cells>
+        <Text text="{projectName}"/>
+        <Text text="{StartDate}"/>
+        <Text text="{EndDate}"/>
+        <Text text="{path: 'assignedEmployees', formatter: '.formatEmployeeNames', targetType: 'any'}"/>
+    </cells>
+</ColumnListItem>
+</items>
+</Table>
+
+
+</core:FragmentDefinition>

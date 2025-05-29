@@ -1,0 +1,121 @@
+_schema-version: "3.2"
+ID: TimeSheet_Ui5
+version: 0.0.1
+modules:
+- name: TimeSheet_Ui5-destination-content
+  type: com.sap.application.content
+  requires:
+  - name: TimeSheet_Ui5-destination-service
+    parameters:
+      content-target: true
+  - name: TimeSheet_Ui5_html_repo_host
+    parameters:
+      service-key:
+        name: TimeSheet_Ui5_html_repo_host-key
+  - name: uaa_TimeSheet_Ui5
+    parameters:
+      service-key:
+        name: uaa_TimeSheet_Ui5-key
+  parameters:
+    content:
+      instance:
+        destinations:
+        - Name: Timesheet_App_TimeSheet_Ui5_html_repo_host
+          ServiceInstanceName: TimeSheet_Ui5-html5-app-host-service
+          ServiceKeyName: TimeSheet_Ui5_html_repo_host-key
+          sap.cloud.service: Timesheet_App
+        - Authentication: OAuth2UserTokenExchange
+          Name: Timesheet_App_uaa_TimeSheet_Ui5
+          ServiceInstanceName: TimeSheet_Ui5-xsuaa-service
+          ServiceKeyName: uaa_TimeSheet_Ui5-key
+          sap.cloud.service: Timesheet_App
+        existing_destinations_policy: ignore
+  build-parameters:
+    no-source: true
+- name: TimeSheet_Ui5-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: TimeSheet_Ui5_html_repo_host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - commanagermanager.zip
+      name: commanagermanager
+      target-path: resources/
+    - artifacts:
+      - comemployeeemployee.zip
+      name: comemployeeemployee
+      target-path: resources/
+    - artifacts:
+      - project1.zip
+      name: project1
+      target-path: resources/
+- name: commanagermanager
+  type: html5
+  path: manager
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: comemployeeemployee
+  type: html5
+  path: employee
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: project1
+  type: html5
+  path: project1
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+resources:
+- name: TimeSheet_Ui5-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: true
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: TimeSheet_Ui5-destination-service
+    service-plan: lite
+- name: TimeSheet_Ui5_html_repo_host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: TimeSheet_Ui5-html5-app-host-service
+    service-plan: app-host
+- name: uaa_TimeSheet_Ui5
+  type: org.cloudfoundry.managed-service
+  parameters:
+    path: ./xs-security.json
+    service: xsuaa
+    service-name: TimeSheet_Ui5-xsuaa-service
+    service-plan: application
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true

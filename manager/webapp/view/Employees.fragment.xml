@@ -1,0 +1,45 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+<Table id="idEmployeesTable" sticky="HeaderToolbar,ColumnHeaders" growing="true" growingThreshold="100" inset="false"   items="{path: '/Employees',sorter: [ { path: 'fullName', descending: false }]}" class="sapFDynamicPageAlignContent" width="auto" visible="true">
+<headerToolbar>
+<Toolbar>
+<Title id="Text" text="Employees ({= ${/Employees/$count}})"/>
+<ToolbarSpacer/>
+<SearchField width="30%" liveChange="onSearchFullName" class="sapUiSmallMargin" />
+<Button type="Emphasized" icon="sap-icon://refresh" tooltip="Refresh" press="refreshEmpTable"/>
+</Toolbar>
+</headerToolbar>
+<columns>
+<Column demandPopin="true" minScreenWidth="Tablet" width="auto" hAlign="Left">
+<Text tooltip="Employee Name" text="Employee Name"/>
+</Column>
+<Column demandPopin="true" minScreenWidth="Tablet" width="10rem" hAlign="Left">
+<Text tooltip="Gender" text="Gender"/>
+</Column>
+<Column minScreenWidth="Tablet" demandPopin="true" width="20rem" hAlign="Left">
+<Text tooltip="Email" text="Email"/>
+</Column>
+<Column minScreenWidth="Tablet" demandPopin="true" width="10rem" hAlign="Left">
+<Text tooltip="JoiningDate" text="Joining Date"/>
+</Column>
+<Column minScreenWidth="Tablet" demandPopin="true" width="10rem" hAlign="Left">
+<Text tooltip="Location" text="Location"/>
+</Column>
+<Column minScreenWidth="Tablet" demandPopin="true" width="auto" hAlign="Left">
+<Text tooltip="ContactNo" text="Contact No"/>
+</Column>
+</columns>
+<items>
+<ColumnListItem>
+    <cells>
+        <Text text="{fullName}"/>
+        <Text text="{gender}"/>
+        <Text text="{email}"/>
+         <Text text="{joiningDate}"/>
+        <Text text="{location}"/>
+        <Text text="{contactNo}"/>
+       
+    </cells>
+</ColumnListItem>
+</items>
+</Table>
+</core:FragmentDefinition>

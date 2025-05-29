@@ -1,0 +1,94 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+>
+    <Dialog
+        id="newProjectDialog"
+        visible="true"
+        class="sapUiResponsivePadding--header sapUiResponsivePadding--content sapUiResponsivePadding--footer"
+    >
+        <customHeader>
+            <Toolbar>
+                <Title text="Add New Project" />
+                <ToolbarSpacer />
+                <Button
+                    icon="sap-icon://decline"
+                    press="onNewProjectClose"
+                    tooltip="Close"
+                />
+            </Toolbar>
+        </customHeader>
+        <content>
+            <VBox class="sapUiSmallMargin">
+                <Label
+                    text="Project Name :"
+                    class="highlightLabel"
+                    required="true"
+                />
+                <Input
+                    id="inputProjectName"
+                    placeholder="Enter Project Name"
+                    width="100%"
+                    class="sapUiSmallMarginBottom"
+                />
+                <Label
+                    text="Project Start Date :"
+                    class="highlightLabel"
+                    required="true"
+                />
+                <DatePicker
+                    id="startDate"
+                    placeholder="Select Project Start Date"
+                    change="handleChange"
+                    class="sapUiSmallMarginBottom"
+                />
+                <Label
+                    text="Project End Date :"
+                    class="highlightLabel"
+                    required="true"
+                />
+                <DatePicker
+                    id="endDate"
+                    placeholder="Select project End Date"
+                    change="handleChange"
+                    class="sapUiSmallMarginBottom"
+                />
+                <Label
+                    text="Assign Employees :"
+                    class="highlightLabel"
+                    required="true"
+                />
+                <MultiComboBox
+                    selectionChange="handleSelectionChange"
+                    selectionFinish="handleSelectionFinish"
+                    placeholder="Select the Employees"
+                    id="EmployeeCombo"
+                    width="350px"
+                    items="{
+				path: '/Employees',
+				sorter: { path: 'employeeFirstName'}
+			}"
+                >
+                    <core:Item
+                        key="{ID}"
+                        text="{fullName}"
+                    />
+                </MultiComboBox>
+            </VBox>
+        </content>
+        <beginButton>
+            <Button
+                text="Submit"
+                type="Accept"
+                press="onNewProSubmit"
+            />
+        </beginButton>
+        <endButton>
+            <Button
+                text="Clear"
+                press="onNewProClear"
+                type="Accept"
+            />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>
