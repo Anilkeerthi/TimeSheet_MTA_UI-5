@@ -10,6 +10,59 @@ sap.ui.define([
         onInit() {
 
         },
+        onButtonPress: function() {
+
+            var sUrl = "/odata/v4/timesheet/whoAmI";
+        
+            const sBaseUrl = sap.ui.require.toUrl("com/manager/manager");
+         
+            $.ajax({
+        
+                url: sBaseUrl + sUrl,
+        
+                method: "GET",
+        
+                dataType: "json",
+        
+                success: function (oData) {
+        
+                    sap.m.MessageToast.show("GET request successful");
+        
+                    // Display the response in a message box
+        
+                    // sap.m.MessageBox.show(
+        
+                    //     `User Info:\nID: ${oData.id}\nEmail: ${oData.email}\nRoles: ${oData.roles.join(", ")}`, 
+        
+                    //     {
+        
+                    //         icon: sap.m.MessageBox.Icon.INFORMATION,
+        
+                    //         title: "User Details",
+        
+                    //         actions: [sap.m.MessageBox.Action.OK]
+        
+                    //     }
+        
+                    // );
+         
+                    console.log("Response data:", oData);
+        
+                },
+        
+                error: function (oError) {
+        
+                    sap.m.MessageToast.show("GET request failed");
+        
+                    console.error("Error response:", oError);
+        
+                }
+        
+            });
+        
+        },
+        
+         
         onSectionChanged: function (oEvent) {
             var sSelectedSectionId = oEvent.getParameter("section").getId();
 
@@ -113,8 +166,11 @@ sap.ui.define([
                 return date.toISOString().split("T")[0];
             }
 
+            const sBaseUrl = sap.ui.require.toUrl("com/manager/manager");
+ 
+
             $.ajax({
-                url: "/odata/v4/timesheet/createProjectWithEmployees",
+                url: sBaseUrl + "/odata/v4/timesheet/createProjectWithEmployees",
                 method: "POST",
                 contentType: "application/json",
                 dataType: "json",
@@ -134,7 +190,7 @@ sap.ui.define([
 
                     that.onNewProjectClose();
                     that.onNewProClear();
-                    that.refreshTable();
+                    that.refreshProTable();
 
                 },
 
@@ -224,6 +280,7 @@ sap.ui.define([
         _refreshingTables: function () {
             console.log("Button Clicked");
             this.refreshProTable();
+            this.refreshEmpTable();
             // MessageToast.show("sdfgh");
 
         },

@@ -17,8 +17,8 @@ server:
           url: https://ui5.sap.com
         backend:
           - path: /odata
-            url: https://28fda213trial-dev-time-sheet-cap-srv.cfapps.us10-001.hana.ondemand.com
-            destination: TimeSheet
+            url: https://26b91e6etrial-dev-timesheet-cap-srv.cfapps.us10-001.hana.ondemand.com
+            destination: Time
     - name: fiori-tools-appreload
       afterMiddleware: compression
       configuration:

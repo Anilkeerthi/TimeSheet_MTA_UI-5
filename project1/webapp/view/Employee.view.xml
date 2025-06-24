@@ -33,7 +33,7 @@
 
         </headerContent>
 
-        <uxap:ObjectPageLayout >
+        <!-- <uxap:ObjectPageLayout >
             <uxap:sections>
                 <uxap:ObjectPageSection >
                     <uxap:subSections>
@@ -77,6 +77,61 @@
                                         </cells>
                                     </ColumnListItem>
                                 </items>
+                            </Table>
+                        </uxap:ObjectPageSubSection>
+
+                    </uxap:subSections>
+                </uxap:ObjectPageSection>
+
+            </uxap:sections>
+        </uxap:ObjectPageLayout> -->
+
+         <uxap:ObjectPageLayout >
+            <uxap:sections>
+                <uxap:ObjectPageSection >
+                    <uxap:subSections>
+                        <uxap:ObjectPageSubSection id="EmployeeTimesheettable" title="">
+                       
+                        </uxap:ObjectPageSubSection>
+                        <uxap:ObjectPageSubSection title="Time Entry Details">
+                            <Table id="idTimeTable" sticky="HeaderToolbar,ColumnHeaders" growing="true" growingThreshold="100" inset="false" items="{path: '/TimeEntries',sorter: [ { path: 'workDate', descending: true }]}" class="sapFDynamicPageAlignContent" width="auto" visible="true">
+                                <headerToolbar>
+                                    <Toolbar>
+                                        <Title id="Text" text="Time Entry Details"/>
+                                        <ToolbarSpacer/>
+                                        <Button type="Emphasized" icon="sap-icon://refresh" tooltip="Refresh" press="tableRefresh"/>
+                                    </Toolbar>
+                                </headerToolbar>
+                                <columns>
+                                    <Column demandPopin="true" minScreenWidth="Tablet" width="auto" hAlign="Left">
+                                        <Text tooltip=" Date" text="Date"/>
+                                    </Column>
+                                    <Column demandPopin="true" minScreenWidth="Tablet" width="10rem" hAlign="Left">
+                                        <Text tooltip="Project" text="Project"/>
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" demandPopin="true" width="20rem" hAlign="Left">
+                                        <Text tooltip="Activity" text="Activity"/>
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" demandPopin="true" width="10rem" hAlign="Left">
+                                        <Text tooltip="Time" text="Time"/>
+                                    </Column>
+                                    <Column minScreenWidth="Tablet" demandPopin="true" width="10rem" hAlign="Left">
+                                        <Text tooltip="Comments" text="Comments"/>
+                                    </Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <Text text="{workDate}"/>
+                                            <Text text="{project/projectName}"/>
+                                            <Text text="{activity}"/>
+                                            <Text text="{hoursWorked}"/>
+                                             <Text text="{comments}"/>
+
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                                
                             </Table>
                         </uxap:ObjectPageSubSection>
 

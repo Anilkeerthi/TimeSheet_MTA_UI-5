@@ -56,13 +56,14 @@
                                 visible="false"
                                 id="addNewProjectButton"
                             />
-                            <!-- <m:Button
+                            
+                             <m:Button
                                 id="editid"
                                 tooltip="Edit"
                                 text="Edit"
                                 type="Emphasized"
-                                press="onEditPress"
-                            />
+                                press="onButtonPress"
+                            /> 
                             <m:Button
                                 visible="true"
                                 id="deleteButtonId"
@@ -70,7 +71,7 @@
                                 type="Transparent"
                                 text="Delete"
                                 press="onDeletePress"
-                            /> -->
+                            /> 
                        
                         </actions>
                     </ObjectPageDynamicHeaderTitle>

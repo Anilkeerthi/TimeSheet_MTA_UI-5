@@ -5,7 +5,7 @@
     {
       "source": "^/odata/(.*)$",
       "target": "/odata/$1",
-      "destination": "TimeSheet",
+      "destination": "Time",
       "authenticationType": "none",
       "csrfProtection": false
     },

@@ -6,6 +6,9 @@
     <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
         <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
     </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+        <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+    </edmx:Reference>
     <edmx:DataServices>
         <Schema Namespace="TimesheetService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
             <Annotation Term="Core.Links">
@@ -27,12 +30,23 @@
                     <NavigationPropertyBinding Path="project" Target="Projects"/>
                     <NavigationPropertyBinding Path="employee" Target="Employees"/>
                 </EntitySet>
+                <EntitySet Name="TimeEntries" EntityType="TimesheetService.TimeEntries">
+                    <NavigationPropertyBinding Path="employee" Target="Employees"/>
+                    <NavigationPropertyBinding Path="project" Target="Projects"/>
+                </EntitySet>
+                <EntitySet Name="Test" EntityType="TimesheetService.Test"/>
+                <FunctionImport Name="whoAmI" Function="TimesheetService.whoAmI"/>
                 <ActionImport Name="createProjectWithEmployees" Action="TimesheetService.createProjectWithEmployees"/>
+                <ActionImport Name="SubmitWeeklyTimeSheet" Action="TimesheetService.SubmitWeeklyTimeSheet"/>
             </EntityContainer>
             <EntityType Name="Projects">
                 <Key>
                     <PropertyRef Name="ID"/>
                 </Key>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
                 <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
                 <Property Name="projectName" Type="Edm.String" MaxLength="100"/>
                 <Property Name="StartDate" Type="Edm.Date"/>
@@ -45,6 +59,10 @@
                 <Key>
                     <PropertyRef Name="ID"/>
                 </Key>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
                 <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
                 <Property Name="employeeFirstName" Type="Edm.String" MaxLength="100"/>
                 <Property Name="employeeLastName" Type="Edm.String" MaxLength="100"/>
@@ -61,6 +79,10 @@
                 <Key>
                     <PropertyRef Name="ID"/>
                 </Key>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
                 <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
                 <NavigationProperty Name="project" Type="TimesheetService.Projects" Partner="assignedEmployees">
                     <ReferentialConstraint Property="project_ID" ReferencedProperty="ID"/>
@@ -72,23 +94,190 @@
                 <Property Name="employee_ID" Type="Edm.Guid"/>
                 <Property Name="assignedDate" Type="Edm.Date"/>
             </EntityType>
+            <EntityType Name="TimeEntries">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <NavigationProperty Name="employee" Type="TimesheetService.Employees">
+                    <ReferentialConstraint Property="employee_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="employee_ID" Type="Edm.Guid"/>
+                <NavigationProperty Name="project" Type="TimesheetService.Projects">
+                    <ReferentialConstraint Property="project_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="project_ID" Type="Edm.Guid"/>
+                <Property Name="activity" Type="Edm.String" MaxLength="50"/>
+                <Property Name="workDate" Type="Edm.Date"/>
+                <Property Name="hoursWorked" Type="Edm.Decimal" Precision="4" Scale="2"/>
+                <Property Name="comments" Type="Edm.String" MaxLength="255"/>
+            </EntityType>
+            <EntityType Name="Test">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.String" MaxLength="11" Nullable="false"/>
+                <Property Name="Name" Type="Edm.String" MaxLength="100"/>
+            </EntityType>
             <ComplexType Name="createProjectInput">
                 <Property Name="projectName" Type="Edm.String"/>
                 <Property Name="startDate" Type="Edm.Date"/>
                 <Property Name="endDate" Type="Edm.Date"/>
                 <Property Name="employeeIDs" Type="Collection(Edm.Guid)" Nullable="true"/>
             </ComplexType>
+            <ComplexType Name="WeeklyTimeSheetEntry">
+                <Property Name="employeeID" Type="Edm.Guid"/>
+                <Property Name="projectID" Type="Edm.Guid"/>
+                <Property Name="activity" Type="Edm.String" MaxLength="50"/>
+                <Property Name="entries" Type="Collection(TimesheetService.DailyEntry)" Nullable="true"/>
+            </ComplexType>
+            <ComplexType Name="DailyEntry">
+                <Property Name="workDate" Type="Edm.Date"/>
+                <Property Name="hoursWorked" Type="Edm.Decimal" Precision="4" Scale="2"/>
+                <Property Name="comments" Type="Edm.String" MaxLength="255"/>
+            </ComplexType>
+            <ComplexType Name="return_TimesheetService_whoAmI">
+                <Property Name="id" Type="Edm.String"/>
+                <Property Name="email" Type="Edm.String"/>
+                <Property Name="roles" Type="Edm.String"/>
+            </ComplexType>
+            <Function Name="whoAmI" IsBound="false" IsComposable="false">
+                <ReturnType Type="TimesheetService.return_TimesheetService_whoAmI"/>
+            </Function>
             <Action Name="createProjectWithEmployees" IsBound="false">
                 <Parameter Name="input" Type="TimesheetService.createProjectInput"/>
                 <ReturnType Type="Collection(Edm.String)" Nullable="true"/>
             </Action>
+            <Action Name="SubmitWeeklyTimeSheet" IsBound="false">
+                <Parameter Name="data" Type="Collection(TimesheetService.WeeklyTimeSheetEntry)" Nullable="true"/>
+                <ReturnType Type="Edm.Boolean"/>
+            </Action>
+            <Annotations Target="TimesheetService.Projects/createdAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="Created On"/>
+            </Annotations>
+            <Annotations Target="TimesheetService.Projects/createdBy">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Common.Label" String="Created By"/>
+            </Annotations>
+            <Annotations Target="TimesheetService.Projects/modifiedAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="Changed On"/>
+            </Annotations>
+            <Annotations Target="TimesheetService.Projects/modifiedBy">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Common.Label" String="Changed By"/>
+            </Annotations>
             <Annotations Target="TimesheetService.Projects/ID">
                 <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+            </Annotations>
+            <Annotations Target="TimesheetService.Employees/createdAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="Created On"/>
+            </Annotations>
+            <Annotations Target="TimesheetService.Employees/createdBy">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Common.Label" String="Created By"/>
+            </Annotations>
+            <Annotations Target="TimesheetService.Employees/modifiedAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="Changed On"/>
+            </Annotations>
+            <Annotations Target="TimesheetService.Employees/modifiedBy">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Common.Label" String="Changed By"/>
             </Annotations>
             <Annotations Target="TimesheetService.Employees/ID">
                 <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
             </Annotations>
+            <Annotations Target="TimesheetService.EmployeeProjects/createdAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="Created On"/>
+            </Annotations>
+            <Annotations Target="TimesheetService.EmployeeProjects/createdBy">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Common.Label" String="Created By"/>
+            </Annotations>
+            <Annotations Target="TimesheetService.EmployeeProjects/modifiedAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="Changed On"/>
+            </Annotations>
+            <Annotations Target="TimesheetService.EmployeeProjects/modifiedBy">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Common.Label" String="Changed By"/>
+            </Annotations>
             <Annotations Target="TimesheetService.EmployeeProjects/ID">
+                <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+            </Annotations>
+            <Annotations Target="TimesheetService.TimeEntries/createdAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="Created On"/>
+            </Annotations>
+            <Annotations Target="TimesheetService.TimeEntries/createdBy">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Common.Label" String="Created By"/>
+            </Annotations>
+            <Annotations Target="TimesheetService.TimeEntries/modifiedAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="Changed On"/>
+            </Annotations>
+            <Annotations Target="TimesheetService.TimeEntries/modifiedBy">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Core.Description" String="User's unique ID"/>
+                <Annotation Term="Common.Label" String="Changed By"/>
+            </Annotations>
+            <Annotations Target="TimesheetService.TimeEntries/ID">
                 <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
             </Annotations>
         </Schema>
